@@ -61,10 +61,22 @@ const NotesPage: React.FC<NotesPageProps> = ({ noteFilter, setNoteFilter, token 
     } catch (e) {
       console.warn("Backend unavailable, loading visually rich mock data for UI testing.", e);
       setNotes([
-        { id: '1', title: 'Biology Notes', excerpt: 'Mitosis is a part of the cell cycle where replicated chromosomes are separated into two new nuclei...', tags: ['Biology'], date: 'Today', author: 'Demo', authorInitial: 'D', fullText: 'Mitosis is a strict sequence of events.' },
-        { id: '2', title: 'Circuit Theory', excerpt: 'Kirchhoffs voltage law states that the sum of voltages around any closed loop is zero...', tags: ['Physics'], date: 'Yesterday', author: 'Demo', authorInitial: 'D', fullText: 'KVL detailed analysis attached here.' },
-        { id: '3', title: 'Calculus III', excerpt: 'Using double integrals to compute the volume under a three dimensional topography...', tags: ['Math'], date: 'Mon', author: 'Demo', authorInitial: 'D', fullText: 'Triple integrals scale up exactly like double integrals.' },
-        { id: '4', title: 'World War II', excerpt: 'The European theater saw heavily armored tank divisions sweeping across the low countries...', tags: ['History'], date: 'Mar 15', author: 'Demo', authorInitial: 'D', fullText: 'Operation Barbarossa details.' }
+        { 
+          id: '1', 
+          title: 'Information Lifecycle Management', 
+          excerpt: 'It represents the journey of the data from creation to disposal, highlighting stages the data passes through in its lifetime...', 
+          tags: ['Computer Science'], 
+          date: 'Just Now', 
+          author: 'Aditya', 
+          authorInitial: 'A', 
+          fullText: `Information Lifecycle Management:
+
+It represents the journey of the data from creation to disposal, highlighting stages the data passes through in its lifetime. Organizes face the challenges of efficiently managing information throughout its lifecycle.
+
+---
+**Lifecycle Diagram:**
+1. Creation -> 2. Storage -> 3. Retrieval -> 4. Usage -> 5. Retirement -> (Cycle repeats)` 
+        }
       ]);
     }
   }, [noteFilter, token]);

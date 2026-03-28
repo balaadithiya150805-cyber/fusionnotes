@@ -61,10 +61,10 @@ export const AuthPage: React.FC<{ onLogin: (token: string) => void }> = ({ onLog
 
           <form className={styles.loginForm} onSubmit={handleLogin}>
             <div className={styles.inputGroup}>
-              <label>Username</label>
+              <label>Username (Test Mode Active)</label>
               <input 
                 type="text" 
-                placeholder="alex.student" 
+                placeholder="aditya.giri" 
                 className={styles.inputField} 
                 value={username}
                 onChange={e => setUsername(e.target.value)}

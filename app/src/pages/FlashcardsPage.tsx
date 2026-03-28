@@ -17,12 +17,7 @@ interface Card {
   answer: string;
 }
 
-const DECKS: Deck[] = [
-  { id: 'd1', title: 'Circuit Theory', count: 48, due: 12, color: '#8b7fff' },
-  { id: 'd2', title: 'Biology — Cell Division', count: 32, due: 8, color: '#4ade80' },
-  { id: 'd3', title: 'WWII History', count: 24, due: 3, color: '#facc15' },
-  { id: 'd4', title: 'Calculus Fundamentals', count: 60, due: 15, color: '#f87171' },
-];
+const DECKS: Deck[] = [];
 
 const CARDS: Card[] = [
   { id: 'c1', question: 'What does Kirchhoff\'s Current Law (KCL) state?', answer: 'The total current entering a junction equals the total current leaving. Σ Iᵢₙ = Σ Iₒᵤₜ' },
@@ -91,6 +86,11 @@ const FlashcardsPage: React.FC = () => {
             Create Deck
           </button>
         </div>
+        {decks.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)' }}>
+            <p>You have no decks yet. Extract one from your notes!</p>
+          </div>
+        )}
         <div className={styles.decksGrid}>
           {decks.map(deck => (
             <div
