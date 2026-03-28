@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import NavPills from './NavPills';
 import AISearchBar from './AISearchBar';
@@ -21,6 +21,28 @@ const TopBar: React.FC<TopBarProps> = ({ activeTab, onTabChange, onSearch }) => 
   // Real-time notification logic
   const [showToast, setShowToast] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
+
+  // Swipe-to-dismiss gesture logic
+  const [dragOffset, setDragOffset] = useState(0);
+  const dragStart = useRef<number | null>(null);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    dragStart.current = e.clientX;
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (dragStart.current === null) return;
+    const diff = e.clientX - dragStart.current;
+    if (diff > 0) setDragOffset(diff); // Only swipe right
+  };
+
+  const handlePointerUp = () => {
+    if (dragOffset > 100) {
+      setShowToast(false);
+    }
+    setDragOffset(0);
+    dragStart.current = null;
+  };
 
   // Trigger an important notification popup after a short delay to simulate live event
   useEffect(() => {
@@ -124,7 +146,19 @@ const TopBar: React.FC<TopBarProps> = ({ activeTab, onTabChange, onSearch }) => 
 
     {/* Live Toast Popup */}
     {showToast && (
-      <div className={styles.toastCard}>
+      <div 
+        className={styles.toastCard}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+        style={{ 
+          transform: dragOffset > 0 ? `translateX(${dragOffset}px)` : undefined,
+          opacity: dragOffset > 0 ? Math.max(0, 1 - dragOffset / 200) : 1,
+          transition: dragStart.current === null ? 'all var(--duration-fast) var(--ease-out)' : 'none',
+          cursor: 'grab' 
+        }}
+      >
         <AlertCircle size={24} color="#ef4444" style={{ flexShrink: 0, marginTop: 2 }} />
         <div className={styles.toastContent}>
           <div className={styles.toastTitle}>Important Sync Change</div>
