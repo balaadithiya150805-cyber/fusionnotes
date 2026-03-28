@@ -1,4 +1,4 @@
-.topbar {
+﻿.topbar {
   position: relative;
   z-index: 10;
   display: flex;
@@ -85,7 +85,7 @@
   box-shadow: 0 4px 15px var(--accent-glow);
 }
 
-/* ── Floating Panels ── */
+/* ΓöÇΓöÇ Floating Panels ΓöÇΓöÇ */
 .panelOverlay {
   position: fixed;
   inset: 0;
@@ -165,7 +165,7 @@
   color: var(--text-primary);
 }
 
-/* ── Toast Notification ── */
+/* ΓöÇΓöÇ Toast Notification ΓöÇΓöÇ */
 .toastCard {
   position: fixed;
   bottom: 30px;

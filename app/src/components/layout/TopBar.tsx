@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import NavPills from './NavPills';
 import AISearchBar from './AISearchBar';
@@ -100,7 +100,7 @@ const TopBar: React.FC<TopBarProps> = ({ activeTab, onTabChange, onSearch }) => 
                     <Bell size={18} className={styles.panelItemIcon} />
                     <div>
                       <div style={{ fontSize: '14px', color: 'var(--text-primary)' }}>Jason attached a file</div>
-                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Biology — Cell Division</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Biology ΓÇö Cell Division</div>
                     </div>
                   </div>
                   <div className={styles.panelItem}>

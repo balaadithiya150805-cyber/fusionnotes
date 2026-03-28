@@ -16,9 +16,10 @@ type Tab = 'dashboard' | 'notes' | 'flashcard' | 'chat';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [jwtToken, setJwtToken] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
-  const [noteFilter, setNoteFilter] = useState('All');
+  const [noteFilter, setNoteFilter] = useState('All Subjects');
 
   const handleSearch = (q: string) => setSearchQuery(q);
   const handleBackFromSearch = () => setSearchQuery(null);
@@ -38,7 +39,7 @@ const App: React.FC = () => {
   ) : activeTab === 'dashboard' ? (
     <DashboardPage onNavigate={handleTabChange} onTagClick={navigateToNotesWithFilter} />
   ) : activeTab === 'notes' ? (
-    <NotesPage noteFilter={noteFilter} setNoteFilter={setNoteFilter} />
+    <NotesPage noteFilter={noteFilter} setNoteFilter={setNoteFilter} token={jwtToken} />
   ) : activeTab === 'flashcard' ? (
     <FlashcardsPage />
   ) : (
@@ -54,28 +55,28 @@ const App: React.FC = () => {
   return (
     <ThemeProvider>
       {!isAuthenticated ? (
-        <AuthPage onLogin={() => setIsAuthenticated(true)} />
+        <AuthPage onLogin={(token) => { setJwtToken(token); setIsAuthenticated(true); }} />
       ) : (
         <div className={styles.appShell}>
           <AnimatedBackground />
-        <TopBar
-          activeTab={activeTab}
-          onTabChange={handleTabChange}
-          onSearch={handleSearch}
-        />
-        <PageLayout
-          main={
-            <div key={searchQuery ? 'search' : activeTab} className="animate-hypr" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
-              <div className={styles.mainInner}>{mainContent}</div>
-            </div>
-          }
-          side={
-            <div key={activeTab} className="animate-hypr" style={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
-              <div className={styles.sideInner}>{sideContent}</div>
-            </div>
-          }
-        />
-      </div>
+          <TopBar
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            onSearch={handleSearch}
+          />
+          <PageLayout
+            main={
+              <div key={searchQuery ? 'search' : activeTab} className="animate-hypr" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+                <div className={styles.mainInner}>{mainContent}</div>
+              </div>
+            }
+            side={
+              <div key={activeTab} className="animate-hypr" style={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+                <div className={styles.sideInner}>{sideContent}</div>
+              </div>
+            }
+          />
+        </div>
       )}
     </ThemeProvider>
   );
