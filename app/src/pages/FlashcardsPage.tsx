@@ -20,10 +20,10 @@ interface Card {
 const DECKS: Deck[] = [];
 
 const CARDS: Card[] = [
-  { id: 'c1', question: 'What does Kirchhoff\'s Current Law (KCL) state?', answer: 'The total current entering a junction equals the total current leaving. Σ Iᵢₙ = Σ Iₒᵤₜ' },
-  { id: 'c2', question: 'What is the formula for Ohm\'s Law?', answer: 'V = IR — Voltage equals Current multiplied by Resistance.' },
-  { id: 'c3', question: 'What are the four phases of Mitosis?', answer: 'Prophase → Metaphase → Anaphase → Telophase (PMAT)' },
-  { id: 'c4', question: 'What is the Power Rule for integration?', answer: '∫xⁿ dx = xⁿ⁺¹ / (n+1) + C, valid for n ≠ -1' },
+  { id: 'c1', question: 'What is Information Lifecycle Management?', answer: 'It represents the journey of the data from creation to disposal, highlighting stages the data passes through in its lifetime.' },
+  { id: 'c2', question: 'What is the primary goal of Information Lifecycle Management?', answer: 'To organize and face the challenges of efficiently managing information throughout its entire lifecycle.' },
+  { id: 'c3', question: 'What is the first phase of the Information Lifecycle?', answer: 'Creation is the first phase, right before Storage.' },
+  { id: 'c4', question: 'Name all 5 absolute stages in the Information Lifecycle diagram.', answer: '1. Creation → 2. Storage → 3. Retrieval → 4. Usage → 5. Retirement' },
 ];
 
 const FlashcardsPage: React.FC = () => {
@@ -35,8 +35,8 @@ const FlashcardsPage: React.FC = () => {
     const newDeck: Deck = {
       id: `d${decks.length + 1}`,
       title: 'Synthesized from Notes',
-      count: 15,
-      due: 15,
+      count: 4,
+      due: 4,
       color: '#a78bfa' // Theme accent color
     };
     setDecks([newDeck, ...decks]);
