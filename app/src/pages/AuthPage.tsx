@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './AuthPage.module.css';
+import AnimatedBackground from '../components/AnimatedBackground';
 import { LogIn, User, Mail } from 'lucide-react';
 
 export const AuthPage: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
