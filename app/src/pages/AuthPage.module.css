@@ -1,0 +1,170 @@
+.authContainer {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.authPanel {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: authEntry 0.5s var(--ease-hypr);
+  box-shadow: var(--shadow-hover);
+}
+
+.logoWrap {
+  margin-bottom: 32px;
+}
+
+.logo {
+  height: 36px;
+  object-fit: contain;
+}
+
+.authCore {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.providers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btnProvider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  border: 1px solid var(--border-glass);
+  font-weight: 500;
+}
+
+.btnProvider:hover {
+  background: var(--bg-glass-hover);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 24px 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.divider span {
+  padding: 0 16px;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputGroup label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.inputField {
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  color: var(--text-primary);
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  outline: none;
+  transition: all var(--duration-fast);
+}
+
+.inputField:focus {
+  border-color: var(--text-primary);
+  background: var(--bg-glass-hover);
+}
+
+.loginBtn {
+  margin-top: 8px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.footerText {
+  margin-top: 32px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.footerText a {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity var(--duration-fast);
+}
+
+.footerText a:hover {
+  opacity: 0.8;
+}
+
+@keyframes authEntry {
+  0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}

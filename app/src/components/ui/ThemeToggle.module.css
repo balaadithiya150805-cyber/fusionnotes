@@ -1,0 +1,8 @@
+.btn {
+  color: var(--text-secondary);
+  transition: color var(--duration-fast), transform var(--duration-fast);
+}
+.btn:hover {
+  color: var(--accent);
+  transform: rotate(20deg);
+}

@@ -1,0 +1,48 @@
+.form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-pill);
+  padding: 9px 16px;
+  transition: all var(--duration-base) var(--ease-hypr);
+  backdrop-filter: blur(20px);
+}
+
+.form.focused {
+  border-color: var(--accent);
+  background: var(--bg-glass-hover);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--text-primary);
+  min-width: 0;
+}
+
+.clearBtn {
+  color: var(--text-muted);
+  padding: 2px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast);
+}
+
+.clearBtn:hover {
+  color: var(--text-primary);
+  background: var(--bg-pill);
+}

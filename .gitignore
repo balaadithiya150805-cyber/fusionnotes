@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+.env
+app/node_modules/
+app/dist/
+app/dist-ssr/
+app/*.local
+app/.vscode/
+app/.idea/

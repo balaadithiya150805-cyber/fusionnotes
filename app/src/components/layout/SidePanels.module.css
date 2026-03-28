@@ -1,0 +1,49 @@
+.panel {
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+}
+
+.section { display: flex; flex-direction: column; gap: 0; padding: 4px 0; }
+.sectionHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.sectionTitle { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 600; }
+
+.divider { height: 1px; background: var(--border-glass); margin: 14px 0; }
+
+/* Activity */
+.activityList { display: flex; flex-direction: column; gap: 10px; }
+.activityItem { display: flex; align-items: flex-start; gap: 8px; }
+.activityDot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.activityText { flex: 1; font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+.activityName { font-weight: 600; color: var(--text-primary); }
+.activityAction { color: var(--text-secondary); }
+.activityTime { font-size: 10.5px; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+
+/* Collaborators */
+.collabList { display: flex; flex-direction: column; gap: 8px; }
+.collabItem { display: flex; align-items: center; gap: 10px; }
+.collabAvatarWrap { position: relative; flex-shrink: 0; }
+.collabAvatar { width: 28px; height: 28px; border-radius: 50%; background: var(--text-primary); color: var(--text-inverse); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.onlineDot { position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--success); border: 1.5px solid var(--bg-base); }
+.collabName { flex: 1; font-size: 13px; color: var(--text-primary); font-weight: 500; }
+.status { font-size: 11px; font-weight: 500; }
+.online { color: var(--success); }
+.offline { color: var(--text-muted); }
+
+/* Mini stats grid */
+.statsGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.miniStat { background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; }
+.miniStatValue { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+.miniStatLabel { font-size: 11px; color: var(--text-muted); }
+
+/* Shortcuts */
+.shortcuts { display: flex; flex-direction: column; gap: 8px; }
+.shortcut { display: flex; align-items: center; gap: 10px; }
+.kbd { background: var(--bg-pill); border: 1px solid var(--border-glass); border-radius: 5px; padding: 2px 8px; font-size: 11px; font-family: monospace; color: var(--text-primary); min-width: 32px; text-align: center; }
+.action { font-size: 12.5px; color: var(--text-secondary); }
+
+/* Shared notes */
+.sharedNote { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--bg-card); border: 1px solid var(--border-card); margin-bottom: 6px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all var(--duration-fast); }
+.sharedNote:hover { background: var(--bg-glass-hover); color: var(--text-primary); }
