@@ -19,43 +19,34 @@ interface NotesPageProps {
   noteFilter: string;
   setNoteFilter: (tag: string) => void;
   token?: string | null;
+  notes: Note[];
+  onUpload: (files: File[], subject: string) => void;
+  isUploading: boolean;
+  statusMsg: { type: 'info' | 'error' | 'success'; text: string } | null;
+  setStatusMsg: (msg: { type: 'info' | 'error' | 'success'; text: string } | null) => void;
+  selectedNoteId: string | null;
+  setSelectedNoteId: (id: string | null) => void;
+  fetchNotes: () => void;
 }
 
-const NotesPage: React.FC<NotesPageProps> = ({ noteFilter, setNoteFilter, token }) => {
+const NotesPage: React.FC<NotesPageProps> = ({ 
+  noteFilter, setNoteFilter, token, notes, onUpload, isUploading, 
+  statusMsg, setStatusMsg, selectedNoteId, setSelectedNoteId, fetchNotes 
+}) => {
   const [search, setSearch] = useState('');
   const [sortMode, setSortMode] = useState<SortMode>('newest');
 
-  const [notes, setNotes] = useState<Note[]>([]);
   const [masterNote, setMasterNote] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
   const [isSynthesizing, setIsSynthesizing] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [masterExpanded, setMasterExpanded] = useState(true);
-  const [statusMsg, setStatusMsg] = useState<{ type: 'info' | 'error' | 'success'; text: string } | null>(null);
+  const [masterModalOpen, setMasterModalOpen] = useState(false);
 
   const activeSubject = noteFilter === 'All Subjects' ? null : noteFilter;
 
   const fetchData = useCallback(async () => {
     try {
       const headers: Record<string, string> = token ? { 'Authorization': `Bearer ${token}` } : {};
-      const rawRes = await fetch(`/api/notes`, { headers });
-      if (rawRes.ok) {
-        const rawData = await rawRes.json();
-        const mappedNotes: Note[] = rawData.map((dbNote: {
-          id: string; group_id: string; extracted_text: string; created_at: string; user_id: string;
-        }) => ({
-          id: dbNote.id,
-          title: dbNote.group_id.charAt(0).toUpperCase() + dbNote.group_id.slice(1) + ' Notes',
-          excerpt: dbNote.extracted_text.substring(0, 150) + '...',
-          fullText: dbNote.extracted_text,
-          tags: [dbNote.group_id.charAt(0).toUpperCase() + dbNote.group_id.slice(1)],
-          date: dbNote.created_at,
-          author: dbNote.user_id,
-          authorInitial: dbNote.user_id.charAt(0).toUpperCase(),
-          color: '#4ade80'
-        }));
-        setNotes(mappedNotes);
-      }
 
       if (activeSubject) {
         const masterRes = await fetch(`/api/synthesized/${activeSubject.toLowerCase()}`, { headers });
@@ -72,46 +63,22 @@ const NotesPage: React.FC<NotesPageProps> = ({ noteFilter, setNoteFilter, token 
     }
   }, [noteFilter, token, activeSubject]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => { 
+    fetchData(); 
+  }, [fetchData]);
 
-  const handleUpload = async (files: File[]) => {
-    if (!files.length || !activeSubject) return;
-    if (!token) {
-      setStatusMsg({ type: 'error', text: 'You must be signed in with a real account to upload notes.' });
-      return;
-    }
-    setIsUploading(true);
-    setStatusMsg({ type: 'info', text: `Uploading ${files.length} file(s) to ${activeSubject} — running Gemini OCR…` });
-    let successCount = 0;
-    let lastError = '';
-    try {
-      const headers: HeadersInit = { 'Authorization': `Bearer ${token}` };
-      for (const file of files) {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('group_id', activeSubject.toLowerCase());
-        const res = await fetch('/api/upload', { method: 'POST', headers, body: formData });
-        if (res.ok) {
-          successCount++;
-        } else {
-          const errData = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
-          lastError = errData.detail || `HTTP ${res.status}`;
-          console.error('Upload error:', lastError);
-        }
+  useEffect(() => {
+    if (selectedNoteId) {
+      const found = notes.find(n => n.id === selectedNoteId);
+      if (found) {
+        setSelectedNote(found);
+        if (found.tags[0]) setNoteFilter(found.tags[0]);
       }
-      await fetchData();
-      if (successCount > 0 && !lastError) {
-        setStatusMsg({ type: 'success', text: `✓ ${successCount} note(s) uploaded and OCR complete!` });
-      } else if (lastError) {
-        setStatusMsg({ type: 'error', text: `Upload failed: ${lastError}` });
-      }
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      setStatusMsg({ type: 'error', text: `Network error: ${msg}` });
-    } finally {
-      setIsUploading(false);
-      setTimeout(() => setStatusMsg(null), 6000);
     }
+  }, [selectedNoteId, notes, setSelectedNote, setNoteFilter]);
+
+  const handleUpload = (files: File[]) => {
+    if (activeSubject) onUpload(files, activeSubject);
   };
 
   const handleSynthesize = async () => {
@@ -128,6 +95,7 @@ const NotesPage: React.FC<NotesPageProps> = ({ noteFilter, setNoteFilter, token 
     try {
       const res = await fetch('/api/synthesize', { method: 'POST', headers, body: formData });
       if (res.ok) {
+        await fetchNotes();
         await fetchData();
         setStatusMsg({ type: 'success', text: `✓ ${activeSubject} master guide synthesized!` });
       } else {
@@ -158,7 +126,7 @@ const NotesPage: React.FC<NotesPageProps> = ({ noteFilter, setNoteFilter, token 
   if (selectedNote) {
     return (
       <div className={styles.page}>
-        <button onClick={() => setSelectedNote(null)} className={styles.backBtn}>
+        <button onClick={() => { setSelectedNote(null); setSelectedNoteId(null); }} className={styles.backBtn}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           Back to Notes
         </button>
@@ -291,9 +259,20 @@ const NotesPage: React.FC<NotesPageProps> = ({ noteFilter, setNoteFilter, token 
               <span>Master {activeSubject} Study Guide</span>
               <span className={styles.masterBadge}>AI Synthesized</span>
             </div>
-            <button className={styles.masterToggle} type="button">
-              {masterExpanded ? '▲' : '▼'}
-            </button>
+            <div className={styles.masterHeaderActions}>
+              <button
+                className={styles.masterExpandBtn}
+                type="button"
+                title="Open fully"
+                onClick={e => { e.stopPropagation(); setMasterModalOpen(true); }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                Open Fully
+              </button>
+              <button className={styles.masterToggle} type="button">
+                {masterExpanded ? '▲' : '▼'}
+              </button>
+            </div>
           </div>
           {masterExpanded && (
             <div className={styles.masterCardBody}>
@@ -325,6 +304,52 @@ const NotesPage: React.FC<NotesPageProps> = ({ noteFilter, setNoteFilter, token 
               </ReactMarkdown>
             </div>
           )}
+        </div>
+      )}
+
+      {/* ── Synthesized Note Full Modal ── */}
+      {masterModalOpen && masterNote && activeSubject && (
+        <div className={styles.modalOverlay} onClick={() => setMasterModalOpen(false)}>
+          <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <div className={styles.masterCardTitle}>
+                <span className={styles.masterStar}>★</span>
+                <span>Master {activeSubject} Study Guide</span>
+                <span className={styles.masterBadge}>AI Synthesized</span>
+              </div>
+              <button className={styles.modalClose} onClick={() => setMasterModalOpen(false)} title="Close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <ReactMarkdown
+                remarkPlugins={[remarkMath, remarkGfm]}
+                rehypePlugins={[rehypeKatex]}
+                components={{
+                  code({ node, inline, className, children, ...props }: any) {
+                    const match = /language-(\w+)/.exec(className || '');
+                    if (!inline && match && match[1] === 'mermaid') {
+                      return <MermaidChart chart={String(children).replace(/\n$/, '')} />;
+                    }
+                    return (
+                      <code className={className} style={{ background: '#1e1e2e', padding: '2px 4px', borderRadius: '4px', fontSize: '90%' }} {...props}>
+                        {children}
+                      </code>
+                    );
+                  },
+                  h1: ({node, ...props}) => <h1 style={{ marginTop: '1.5em', marginBottom: '0.5em', color: '#fff', fontSize: '1.8em', borderBottom: '1px solid #333', paddingBottom: '0.3em' }} {...props} />,
+                  h2: ({node, ...props}) => <h2 style={{ marginTop: '1.2em', marginBottom: '0.5em', color: '#e2e8f0', fontSize: '1.4em' }} {...props} />,
+                  h3: ({node, ...props}) => <h3 style={{ marginTop: '1em', marginBottom: '0.5em', color: '#cbd5e1', fontSize: '1.1em' }} {...props} />,
+                  p: ({node, ...props}) => <p style={{ marginBottom: '1em', lineHeight: '1.7' }} {...props} />,
+                  ul: ({node, ...props}) => <ul style={{ paddingLeft: '1.5em', marginBottom: '1em' }} {...props} />,
+                  li: ({node, ...props}) => <li style={{ marginBottom: '0.25em' }} {...props} />,
+                  a: ({node, ...props}) => <a style={{ color: '#a78bfa', textDecoration: 'none' }} {...props} />
+                }}
+              >
+                {masterNote}
+              </ReactMarkdown>
+            </div>
+          </div>
         </div>
       )}
 

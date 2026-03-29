@@ -14,42 +14,64 @@ interface Conversation {
   preview: string;
   time: string;
   unread?: number;
+  avatar: string;
+  memberCount?: number;
+  onlineCount?: number;
 }
 
 const CONVERSATIONS: Conversation[] = [
-  { id: 'c1', title: 'Study Group — Physics', preview: 'Can someone explain KCL again?', time: '2m', unread: 3 },
-  { id: 'c2', title: 'Emma Wilson', preview: 'I uploaded the biology notes!', time: '14m' },
-  { id: 'c3', title: 'Study Group — Math', preview: 'Integration test on Friday', time: '1h' },
-  { id: 'c4', title: 'Jason Park', preview: 'Did you finish the WW2 summary?', time: '3h' },
-  { id: 'c5', title: 'Sarah Chen', preview: 'Check out my flashcard deck', time: '5h' },
+  { id: 'c1', title: 'Study Group — Physics', preview: 'Can someone explain KCL again?', time: '2m', unread: 3, avatar: 'S', memberCount: 4, onlineCount: 3 },
+  { id: 'c2', title: 'Emma Wilson', preview: 'I uploaded the biology notes!', time: '14m', avatar: 'E', memberCount: 2, onlineCount: 1 },
+  { id: 'c3', title: 'Study Group — Math', preview: 'Integration test on Friday', time: '1h', avatar: 'S', memberCount: 5, onlineCount: 2 },
+  { id: 'c4', title: 'Jason Park', preview: 'Did you finish the WW2 summary?', time: '3h', avatar: 'J', memberCount: 2, onlineCount: 0 },
+  { id: 'c5', title: 'Sarah Chen', preview: 'Check out my flashcard deck', time: '5h', avatar: 'S', memberCount: 2, onlineCount: 1 },
 ];
 
-const INITIAL_MESSAGES: Message[] = [
-  { id: 'm1', role: 'ai',   text: 'Hey! I uploaded the circuit theory notes. Let me know if you need anything explained.', time: '9:30 AM' },
-  { id: 'm2', role: 'user', text: 'Great, thanks Emma! Can you clarify KCL for node analysis?', time: '9:32 AM' },
-  { id: 'm3', role: 'ai',   text: 'Sure! KCL says the sum of currents entering any node = sum of currents leaving. So if you label branch currents i₁, i₂, i₃, you set up equations accordingly.', time: '9:33 AM' },
-  { id: 'm4', role: 'user', text: 'Got it. What about when there are voltage sources in the loop?', time: '9:35 AM' },
+const AI_REPLIES = [
+  'Great question! Let me pull the relevant section from our shared notes.',
+  'I think the synthesized guide covers this — check the master notes for that subject.',
+  'Let me look that up. In the meantime, did you check the uploaded notes?',
+  "Good point! I'll add that to the notes summary when I get a chance.",
 ];
 
-const ChatPage: React.FC = () => {
+interface ChatPageProps {
+  allMessages: Record<string, Message[]>;
+  setAllMessages: React.Dispatch<React.SetStateAction<Record<string, Message[]>>>;
+}
+
+const ChatPage: React.FC<ChatPageProps> = ({ allMessages, setAllMessages }) => {
   const [activeConv, setActiveConv] = useState('c1');
-  const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+  const messages = allMessages[activeConv] ?? [];
+  const activeConvData = CONVERSATIONS.find(c => c.id === activeConv)!;
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, typing, activeConv]);
 
   const send = () => {
     if (!input.trim()) return;
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', text: input, time: 'Now' };
-    setMessages(m => [...m, userMsg]);
+    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', text: input, time: now };
+    setAllMessages(prev => ({
+      ...prev,
+      [activeConv]: [...(prev[activeConv] ?? []), userMsg],
+    }));
     setInput('');
     setTyping(true);
     setTimeout(() => {
-      setMessages(m => [...m, { id: (Date.now() + 1).toString(), role: 'ai', text: 'Great question! Let me pull the relevant section from our shared notes and get back to you.', time: 'Now' }]);
+      const reply = AI_REPLIES[Math.floor(Math.random() * AI_REPLIES.length)];
+      setAllMessages(prev => ({
+        ...prev,
+        [activeConv]: [...(prev[activeConv] ?? []), {
+          id: (Date.now() + 1).toString(), role: 'ai', text: reply, time: now,
+        }],
+      }));
       setTyping(false);
-    }, 1800);
+    }, 1500 + Math.random() * 800);
   };
 
   return (
@@ -62,40 +84,49 @@ const ChatPage: React.FC = () => {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
         </div>
-        {CONVERSATIONS.map(conv => (
-          <button
-            key={conv.id}
-            className={`${styles.convItem} ${activeConv === conv.id ? styles.convActive : ''}`}
-            onClick={() => setActiveConv(conv.id)}
-            id={`conv-${conv.id}`}
-          >
-            <div className={styles.convAvatar}>{conv.title[0]}</div>
-            <div className={styles.convInfo}>
-              <div className={styles.convName}>{conv.title}</div>
-              <div className={styles.convPreview}>{conv.preview}</div>
-            </div>
-            <div className={styles.convRight}>
-              <span className={styles.convTime}>{conv.time}</span>
-              {conv.unread && <span className={styles.badge}>{conv.unread}</span>}
-            </div>
-          </button>
-        ))}
+        <div className={styles.convItems}>
+          {CONVERSATIONS.map(conv => (
+            <button
+              key={conv.id}
+              className={`${styles.convItem} ${activeConv === conv.id ? styles.convActive : ''}`}
+              onClick={() => setActiveConv(conv.id)}
+              id={`conv-${conv.id}`}
+            >
+              <div className={styles.convAvatar}>{conv.avatar}</div>
+              <div className={styles.convInfo}>
+                <div className={styles.convName}>{conv.title}</div>
+                <div className={styles.convPreview}>{conv.preview}</div>
+              </div>
+              <div className={styles.convRight}>
+                <span className={styles.convTime}>{conv.time}</span>
+                {conv.unread && <span className={styles.badge}>{conv.unread}</span>}
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Chat Window */}
       <div className={styles.chatWindow}>
         <div className={styles.chatHeader}>
-          <div className={styles.headerAvatar}>S</div>
+          <div className={styles.headerAvatar}>{activeConvData.avatar}</div>
           <div>
-            <div className={styles.headerName}>Study Group — Physics</div>
-            <div className={styles.headerSub}>4 members · <span style={{ color: 'var(--success)' }}>3 online</span></div>
+            <div className={styles.headerName}>{activeConvData.title}</div>
+            <div className={styles.headerSub}>
+              {activeConvData.memberCount && activeConvData.memberCount > 2
+                ? `${activeConvData.memberCount} members · `
+                : ''}
+              {activeConvData.onlineCount != null && activeConvData.onlineCount > 0
+                ? <span style={{ color: 'var(--success)' }}>{activeConvData.onlineCount} online</span>
+                : <span style={{ color: 'var(--text-muted)' }}>Away</span>}
+            </div>
           </div>
         </div>
 
         <div className={styles.messages}>
           {messages.map(msg => (
             <div key={msg.id} className={`${styles.msgRow} ${msg.role === 'user' ? styles.msgUser : styles.msgAI}`}>
-              {msg.role === 'ai' && <div className={styles.msgAvatar}>E</div>}
+              {msg.role === 'ai' && <div className={styles.msgAvatar}>{activeConvData.avatar}</div>}
               <div className={styles.bubble}>
                 <p className={styles.bubbleText}>{msg.text}</p>
                 <span className={styles.bubbleTime}>{msg.time}</span>
@@ -104,7 +135,7 @@ const ChatPage: React.FC = () => {
           ))}
           {typing && (
             <div className={`${styles.msgRow} ${styles.msgAI}`}>
-              <div className={styles.msgAvatar}>E</div>
+              <div className={styles.msgAvatar}>{activeConvData.avatar}</div>
               <div className={`${styles.bubble} ${styles.typingBubble}`}>
                 <span className={styles.dot} /><span className={styles.dot} /><span className={styles.dot} />
               </div>
