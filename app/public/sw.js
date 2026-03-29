@@ -2,7 +2,12 @@ const CACHE_NAME = 'fusionnotes-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json'
+  '/manifest.json',
+  '/favicon.svg',
+  '/darklogo.png',
+  '/lightlogo.png',
+  '/darklogo_transparent.png',
+  '/lightlogo_transparent.png'
 ];
 
 self.addEventListener('install', event => {

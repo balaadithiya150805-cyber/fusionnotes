@@ -125,45 +125,58 @@ const TopBar: React.FC<TopBarProps> = ({ activeTab, onTabChange, onSearch, user,
       )}
 
       {/* Main TopBar */}
-      <header className={styles.topbar}>
-      <div className={styles.logoZone}>
-        <img
-          src={logo}
-          alt="Fusionnotes"
-          className={styles.logo}
-          draggable={false}
-        />
-      </div>
+      <header className={`${styles.topbar} ${isMobile ? styles.topbarMobile : ''}`}>
+        <div className={styles.headerTop}>
+          <div className={styles.logoZone}>
+            <img
+              src={logo}
+              alt="Fusionnotes"
+              className={styles.logo}
+              draggable={false}
+            />
+          </div>
 
-      {!isMobile && (
-        <div className={styles.centerZone}>
-          <AISearchBar onSearch={onSearch} />
-          <NavPills activeTab={activeTab} onTabChange={onTabChange} />
-        </div>
-      )}
-
-      <div className={styles.actionsZone}>
-        {isMobile ? (
-          <button className="icon-btn" onClick={onMenuClick}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          </button>
-        ) : (
-          <>
-            <LanguageSelector />
-            <ThemeToggle />
-            <div className={styles.notifBtnWrap}>
-              <button className="icon-btn" title={t('topbar.notifications')} onClick={() => { setActivePanel('notifications'); setHasUnread(false); }}>
-                <Bell size={18} />
+          <div className={styles.actionsZone}>
+            {isMobile ? (
+              <button className={styles.menuBtn} onClick={onMenuClick}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
               </button>
-              {hasUnread && <span className={styles.notifBadge} />}
+            ) : (
+              <>
+                <LanguageSelector />
+                <ThemeToggle />
+                <div className={styles.notifBtnWrap}>
+                  <button className="icon-btn" title={t('topbar.notifications')} onClick={() => { setActivePanel('notifications'); setHasUnread(false); }}>
+                    <Bell size={18} />
+                  </button>
+                  {hasUnread && <span className={styles.notifBadge} />}
+                </div>
+                <button className={styles.avatar} title={t('topbar.accountSettings')} onClick={() => setActivePanel('profile')}>
+                  <span>{(user?.username || 'S')[0].toUpperCase()}</span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {isMobile ? (
+          <div className={styles.mobileNavStack}>
+            <div className={styles.searchWrapper}>
+              <AISearchBar onSearch={onSearch} />
             </div>
-            <button className={styles.avatar} title={t('topbar.accountSettings')} onClick={() => setActivePanel('profile')}>
-              <span>{(user?.username || 'S')[0].toUpperCase()}</span>
-            </button>
-          </>
+            <div className={styles.navWrapper}>
+              <NavPills activeTab={activeTab} onTabChange={onTabChange} />
+            </div>
+          </div>
+        ) : (
+          <div className={styles.centerZone}>
+            <AISearchBar onSearch={onSearch} />
+            <NavPills activeTab={activeTab} onTabChange={onTabChange} />
+          </div>
         )}
-      </div>
-    </header>
+      </header>
 
     {/* Live Toast Popup */}
     {showToast && (

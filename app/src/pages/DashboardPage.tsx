@@ -1,7 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import AISearchBar from '../components/layout/AISearchBar';
-import NavPills from '../components/layout/NavPills';
 import type { Note } from '../types/note';
 import StatCard from '../components/ui/StatCard';
 import NoteCard from '../components/ui/NoteCard';
@@ -22,7 +20,7 @@ interface DashboardProps {
   activeTab?: string;
 }
 
-const DashboardPage: React.FC<DashboardProps> = ({ onNavigate, onTagClick, notes, onUpload, isUploading, onSelectNote, user, isMobile, onSearch, activeTab }) => {
+const DashboardPage: React.FC<DashboardProps> = ({ onNavigate, onTagClick, notes, onUpload, isUploading, onSelectNote, user, isMobile }) => {
   const { t } = useTranslation();
   const recentNotes = notes.slice(0, 4);
 
@@ -33,12 +31,6 @@ const DashboardPage: React.FC<DashboardProps> = ({ onNavigate, onTagClick, notes
 
   return (
     <div className={styles.page}>
-      <div className={styles.mobileNavStack}>
-        <AISearchBar onSearch={onSearch || (() => {})} />
-        <div className={styles.pillsScrollContainer}>
-           <NavPills activeTab={activeTab || 'dashboard'} onTabChange={onNavigate || (() => {})} />
-        </div>
-      </div>
       
       {/* Header */}
       <div className={styles.header}>
