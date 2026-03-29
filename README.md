@@ -1,44 +1,11 @@
-# FusionNotes: A Unified Approach to Context-Aware Collaborative Learning
+# FusionNotes
 
-## The Problem: The Disconnect in Student Learning
-Modern education is characterized by fast-paced lectures and a massive cognitive load. Students often take unstructured, context-dependent notes during these sessions, which quickly become difficult to decipher or understand as time passes. This fragmentation leads to inefficient revision cycles where learners spend more time re-learning old concepts than reinforcing new ones.
+**Problem Statement:** Students often take unstructured, context-dependent notes during fast-paced lectures, which become difficult to understand over time. This leads to inefficient revision, where learners spend more time re-learning than reinforcing concepts. At the same time, peer learning remains underutilized due to social hesitation, lack of suitable partners, and absence of structured collaboration systems. The disconnect between individual note-taking and collaborative learning results in poor knowledge retention, reduced engagement, and increased academic stress. A unified approach that bridges personal understanding with peer interaction is currently missing.
 
-Furthermore, traditional peer learning remains significantly underutilized. Social hesitation, the difficulty of finding suitable study partners, and the absence of structured collaboration systems mean that collective intelligence is rarely harnessed. This disconnect between individual note-taking and collaborative learning results in poor knowledge retention, reduced engagement, and increased academic stress.
+**The Solution:** FusionNotes is a context-aware collaborative learning platform that unifies individual note-taking with peer interaction. By acting as an intelligent mediator, the system transforms unstructured, context-dependent personal notes into structured, high-retention group resources. Students no longer have to rely on disorganized materials or overcome social hesitation to benefit from peer knowledge; they simply upload their individual notes to a shared subject pool, and the application automatically synthesizes the collective input into a unified, accurate, and easily digestible master study guide.
 
-## The Solution: FusionNotes
-FusionNotes is designed to bridge the gap between personal understanding and peer interaction. By providing a unified platform that transforms fragmented, unstructured data into stable, high-quality knowledge, we empower students to learn more effectively together.
+**RAG System & Context-Aware Intelligence:** At the core of FusionNotes is a Retrieval-Augmented Generation (RAG) system powered by Google Gemini 2.5 Flash and orchestrated via a FastAPI backend. When notes are uploaded (via images or PDFs), an OCR pipeline extracts the raw text. During synthesis, the RAG architecture retrieves relevant concepts from all peer-submitted materials within that subject, cross-references overlapping data, and generates a contextually accurate master guide that fills in individual knowledge gaps without hallucination.
 
-### Context-Aware Intelligent Ingestion
-FusionNotes leverages a FastAPI backend and Google Gemini 2.5 Flash to process unstructured session data. When a student captures a photo of handwritten notes or a PDF, our OCR pipeline does more than just extract text; it understands the context of the lecture, formatting raw data into structured, readable Markdown. This ensures that notes taken in the heat of a fast-paced lecture remain intelligible and useful for long-term revision.
+**High-Fidelity Rendering & Additional Features:** To handle complex subjects, the application utilizes specialized rendering technologies to preserve academic context. It natively processes mathematical formulas using KaTeX for scientific accuracy and generates structured Mermaid flowcharts to visualize biological processes or historical timelines directly within the generated master guide. The platform also provides offline simulation capabilities for continuous UI access and rapid markdown rendering.
 
-### Automated Collaborative Synthesis
-To solve the "social hesitation" and "partner matching" problems, FusionNotes acts as a neutral, AI-powered mediator for peer learning. In a collective subject environment, students contribute their individual perspectives to a shared topic. Our synthesis engine cross-references every contributed note, identifies core conceptual overlaps, fills in intellectual gaps, and generates a master study guide. This allows students to benefit from peer intelligence without the friction of traditional group work.
-
-### High-Fidelity Knowledge Representation
-For complex scientific and mathematical subjects, knowledge retention is tied to visualization. FusionNotes supports:
-- Mathematical LaTeX formulas through KaTeX for scientific accuracy.
-- Mermaid flowcharts for visualizing complex biological or historical sequences.
-- Structured Markdown tables for data comparison.
-This multi-modal approach ensures that the "context" of the learning is preserved in the final master guide.
-
-## Tech Stack and Technical Depth
-Our solution is built on a robust, scalable architecture designed for real-world academic scenarios:
-- Frontend: React 18 with TypeScript for a type-safe, responsive user interface.
-- Backend: FastAPI (Python) for high-performance API orchestration and file handling.
-- Intelligence: Google Generative AI (Gemini 2.5 Flash) for state-of-the-art OCR and synthesis.
-- Infrastructure: Supabase for secure JWT-based authentication and a managed PostgreSQL database.
-- Rendering: A custom synthesis renderer integrating react-markdown, rehype-katex, and mermaid-js.
-
-## Competitive Alignment and Marking Rubric
-
-### Innovation and Originality
-FusionNotes moves beyond simple cloud storage. Our "Group Knowledge Synthesis" approach is a novel solution to peer learning gaps, providing a distinctive way to generate collective intelligence from fragmented individual effort.
-
-### Technical Implementation
-The system demonstrates depth through its integration of AI-driven OCR, multi-format rendering (LaTeX/Mermaid), and a secure full-stack architecture. We handle complex edge cases such as varying handwriting quality and multi-student synthesis conflicts at the API layer.
-
-### Feasibility and Scalability
-By utilizing managed services like Supabase and Google Gemini, FusionNotes is highly scalable and reliable. The system is designed for practical classroom use, with a focus on low-latency interactions and high usability.
-
-## Open Source and Ethics
-FusionNotes is a fully open-source project created to foster better learning environments globally. It requires no payment or subscription, ensuring that professional-grade collaborative tools are accessible to all students regardless of financial constraints.
+**Libraries & Technology Stack:** The solution is built on a scalable, open-source stack. The frontend utilizes React 18, Vite, TypeScript, Lucide React, react-markdown, rehype-katex, and mermaid-js to deliver a responsive UI. The backend uses FastAPI (Python) for rapid orchestration and Google Generative AI SDK for intelligence. Secure user authentication, data management, and row-level security are fully handled by Supabase (managed PostgreSQL).
