@@ -13,7 +13,16 @@ At the core of our project is a Retrieval-Augmented Generation (RAG) system powe
 To handle complex subjects, we implemented specialized rendering technologies to preserve academic context. We engineered the platform to natively process mathematical formulas using KaTeX for scientific accuracy, and we generate structured Mermaid flowcharts to visualize biological processes or historical timelines directly within the generated master guide. We also provided offline frontend simulation capabilities for continuous UI access and rapid markdown rendering even when disconnected.
 
 ## Libraries & Technology Stack
-We developed our solution on a scalable, open-source stack. For our frontend, we utilize React 18, Vite, TypeScript, Lucide React, react-markdown, rehype-katex, and mermaid-js to deliver a highly responsive UI. For our backend, we use FastAPI (Python) for rapid orchestration and the Google Generative AI SDK for intelligence. We fully manage secure user authentication, data management, and row-level access security through Supabase (managed PostgreSQL).
+We developed our solution on a scalable, open-source stack. To deliver a complete and robust application, we utilize the following core libraries:
+
+- **React 18 & Vite:** For a highly responsive, fast-loading frontend architecture.
+- **TypeScript:** To ensure strict type safety and a robust, maintainable codebase.
+- **FastAPI (Python):** For rapid backend API orchestration and efficient file handling.
+- **Google Generative AI SDK:** To power our RAG system, enabling Gemini 2.5 Flash for OCR and synthesis.
+- **Supabase:** To fully manage our PostgreSQL database, secure JWT user authentication, and row-level security.
+- **react-markdown & rehype-katex:** To natively render complex academic Markdown and mathematical LaTeX formulas.
+- **mermaid-js:** To dynamically draw structured flowcharts and diagrams directly within the master guide.
+- **Lucide React:** For beautifully consistent, lightweight scalar vector icons.
 
 ## Testing & Local Setup
 To run and test our full application logic locally:
